@@ -1,0 +1,159 @@
+{
+    "source":  "demo",
+    "panorama_cards":  5,
+    "percentile_cards":  4,
+    "uf_rows":  27,
+    "socio_groups":  8,
+    "essay_results":  1,
+    "js_errors":  [
+
+                  ],
+    "api_responses":  [
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/meta/years",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/socioeconomic?year=2024\u0026area=MT\u0026dimension=renda",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/region-school?year=2024\u0026area=MT",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/summary?year=2024",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/meta/years",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/socioeconomic?year=2024\u0026area=MT\u0026dimension=renda",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/summary?year=2024",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/region-school?year=2024\u0026area=MT",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/socioeconomic?year=2025\u0026area=MT\u0026dimension=renda",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/summary?year=2025",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/region-school?year=2025\u0026area=MT",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/summary?year=2024",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/region-school?year=2024\u0026area=MT",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/socioeconomic?year=2024\u0026area=MT\u0026dimension=renda",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/summary?year=2025",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/socioeconomic?year=2025\u0026area=MT\u0026dimension=renda",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/region-school?year=2025\u0026area=MT",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/percentile",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/percentile",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/socioeconomic?year=2025\u0026area=MT\u0026dimension=escolaridade_mae",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/socioeconomic?year=2025\u0026area=LC\u0026dimension=escolaridade_mae",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/region-school?year=2025\u0026area=MT\u0026school_type=2",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/region-school?year=2025\u0026area=MT\u0026school_type=3",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/region-school?year=2025\u0026area=MT",
+                              "status":  200
+                          },
+                          {
+                              "url":  "http://127.0.0.1:5174/api/v1/analysis/essay",
+                              "status":  200
+                          }
+                      ],
+    "video":  "videos-apresentacao/panorama-enem-demonstracao.mp4",
+    "duration":  "00:02:03.16",
+    "bytes":  13456288,
+    "resolution":  "1920x1080",
+    "chapters":  [
+                     {
+                         "seconds":  2.73,
+                         "title":  "Visão geral — modo DEMO, dados sintéticos"
+                     },
+                     {
+                         "seconds":  13.8,
+                         "title":  "Meu Panorama — notas de exemplo e percentis nas cinco áreas"
+                     },
+                     {
+                         "seconds":  35.12,
+                         "title":  "Exportação do resultado em imagem"
+                     },
+                     {
+                         "seconds":  44.3,
+                         "title":  "Minha Posição — cálculo por área"
+                     },
+                     {
+                         "seconds":  51.77,
+                         "title":  "Socioeconômico — renda e escolaridade familiar"
+                     },
+                     {
+                         "seconds":  65.98,
+                         "title":  "Estados e Escolas — mapa e filtros"
+                     },
+                     {
+                         "seconds":  83.25,
+                         "title":  "Pesquisa e ordenação das 27 UFs"
+                     },
+                     {
+                         "seconds":  100.91,
+                         "title":  "Redação — percentil e z-score"
+                     },
+                     {
+                         "seconds":  109.19,
+                         "title":  "Metodologia e transparência"
+                     },
+                     {
+                         "seconds":  116.34,
+                         "title":  "Panorama ENEM — encerramento"
+                     }
+                 ]
+}

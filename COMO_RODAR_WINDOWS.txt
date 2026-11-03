@@ -1,0 +1,28 @@
+PANORAMA ENEM - GUIA RÁPIDO (WINDOWS)
+
+OPÇÃO A - MAIS FÁCIL, COM DOCKER
+1. Instale Docker Desktop.
+2. Abra o PowerShell na pasta do projeto.
+3. Execute:
+   docker compose up --build
+4. Abra no navegador:
+   http://localhost:8080
+5. Documentação da API:
+   http://localhost:8000/docs
+
+OPÇÃO B - DESENVOLVIMENTO
+Pré-requisitos: Python 3.12 e Node.js 20+.
+1. Abra o PowerShell na pasta do projeto.
+2. Execute:
+   .\scripts\start-dev.ps1
+3. Abra:
+   http://localhost:5173
+
+MICRODADOS REAIS DO INEP
+Depois de instalar o ambiente Python:
+   python -m app.etl.cli all --years 2025
+ou:
+   python -m app.etl.cli all --years 2018-2025
+
+Sem os Parquets oficiais, o projeto abre automaticamente em modo demonstração.
+O dataset de demonstração é sintético e não deve ser usado em conclusões acadêmicas.

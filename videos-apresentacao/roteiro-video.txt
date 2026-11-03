@@ -1,0 +1,15 @@
+Panorama ENEM — demonstração da interface
+
+Gravação real em modo DEMO, com dados sintéticos e notas de exemplo. Sem áudio.
+Não representa validação integral do projeto nem resultados oficiais do ENEM.
+
+00:02 — Visão geral — modo DEMO, dados sintéticos
+00:13 — Meu Panorama — notas de exemplo e percentis nas cinco áreas
+00:35 — Exportação do resultado em imagem
+00:44 — Minha Posição — cálculo por área
+00:51 — Socioeconômico — renda e escolaridade familiar
+01:05 — Estados e Escolas — mapa e filtros
+01:23 — Pesquisa e ordenação das 27 UFs
+01:40 — Redação — percentil e z-score
+01:49 — Metodologia e transparência
+01:56 — Panorama ENEM — encerramento
