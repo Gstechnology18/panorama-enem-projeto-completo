@@ -5,8 +5,8 @@
 Este repositório reúne o código da aplicação, a documentação, os testes, os dados sintéticos de demonstração e os materiais de apresentação.
 
 ```bash
-git clone https://github.com/Gstechnology18/panorama-enem.git
-cd panorama-enem
+git clone https://github.com/Gstechnology18/panorama-enem-projeto-completo.git
+cd panorama-enem-projeto-completo
 ```
 
 Também é possível baixar tudo pelo botão **Code → Download ZIP**. Após extrair, abra um terminal na pasta que contém este README. Para executar localmente, tenha Python 3.12 e Node.js 22 com npm instalados, ou use Docker Compose conforme as instruções abaixo.
