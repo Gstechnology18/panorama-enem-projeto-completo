@@ -1,4 +1,4 @@
-.PHONY: install test api web demo docker etl-2025 etl-all
+.PHONY: install test api web demo docker etl-2025 etl-all gold
 
 install:
 	python -m pip install -e '.[dev]'
@@ -21,3 +21,7 @@ etl-2025:
 
 etl-all:
 	python -m app.etl.cli all --years 2018-2025
+
+# Gera a camada gold no repositório do ETL (ao lado deste) e a API passa a usá-la
+gold:
+	cd ../enem_projeto_aplicado && uv run python -m enem_pja3.load.load

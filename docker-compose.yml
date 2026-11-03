@@ -6,10 +6,13 @@ services:
     environment:
       PANORAMA_ENV: production
       PANORAMA_DATA_MODE: auto
+      PANORAMA_GOLD_PATH: /app/backend/data/gold/enem_notas.parquet
       PANORAMA_PARQUET_GLOB: /app/backend/data/parquet/ano=*/enem.parquet
       PANORAMA_DEMO_CSV: /app/backend/data/demo/enem_demo.csv
       PANORAMA_CORS_ORIGINS: http://localhost:8080
     volumes:
+      # Gold do ETL (enem_projeto_aplicado/data/gold). Outro caminho: ENEM_GOLD_DIR=/caminho
+      - ${ENEM_GOLD_DIR:-../enem_projeto_aplicado/data/gold}:/app/backend/data/gold:ro
       - ./backend/data/parquet:/app/backend/data/parquet:ro
     ports:
       - "8000:8000"

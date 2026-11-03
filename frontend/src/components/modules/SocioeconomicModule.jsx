@@ -19,6 +19,7 @@ export default function SocioeconomicModule({ year }) {
   useEffect(() => {
     let active = true
     setData(null)
+    setError('')
     api.socioeconomic(year, area, dimension)
       .then((payload) => {
         if (active) setData(payload)
@@ -73,7 +74,12 @@ export default function SocioeconomicModule({ year }) {
       {error && <div className="alert" role="alert">{error}</div>}
 
       {!data ? (
-        <Loading label="Carregando panorama socioeconômico…" />
+        !error && <Loading label="Carregando panorama socioeconômico…" />
+      ) : !data.groups?.length ? (
+        <div className="insight-banner subtle" role="status">
+          <strong>Sem dados para este recorte em {year}.</strong>
+          <span>Nesta edição o INEP publicou o questionário socioeconômico separado das notas, sem como ligar os dois. O recorte está disponível de 2018 a 2023.</span>
+        </div>
       ) : (
         <>
           {summary && (

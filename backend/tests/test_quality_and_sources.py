@@ -21,6 +21,7 @@ def valid_enem_csv() -> str:
 def test_official_mode_requires_valid_dataset(tmp_path):
     settings = Settings(
         data_mode="official",
+        gold_path=str(tmp_path / "gold" / "enem_notas.parquet"),
         parquet_glob=str(tmp_path / "parquet" / "ano=*" / "enem.parquet"),
         demo_csv=str(tmp_path / "demo.csv"),
     )

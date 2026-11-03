@@ -467,7 +467,100 @@ class DuckDBEngine(DataEngine):
         }
 
 
-_engine_cache: dict[tuple[str, str, str], DataEngine] = {}
+# Colunas que a camada gold do ETL (repositório enem_projeto_aplicado) precisa ter.
+GOLD_REQUIRED_COLUMNS = (
+    "NU_ANO",
+    "SG_UF_PROVA",
+    "TIPO_ESCOLA",
+    "ESCOLARIDADE_PAI",
+    "ESCOLARIDADE_MAE",
+    "RENDA_FAMILIAR",
+    *AREA_COLUMNS.values(),
+    "IN_NOTA_ZERO",
+)
+
+
+class GoldEngine(DuckDBEngine):
+    """DuckDB engine over the ETL gold layer (``data/gold/enem_notas.parquet``).
+
+    A gold junta as 8 edições em um único Parquet com colunas harmonizadas entre os anos.
+    Aqui elas são traduzidas para o mesmo contrato usado pelos outros engines:
+
+    - ``TIPO_ESCOLA`` ('publica'/'privada') vira ``TP_ESCOLA`` 2/3. Nas edições em que o INEP
+      liga escola e nota (2018 a 2023), vazio significa "não respondeu" (código 1). Em 2024 e
+      2025 o perfil não está ligado à nota, então fica vazio. 'exterior' (só em 2018) fica de fora;
+    - ``ESCOLARIDADE_PAI``, ``ESCOLARIDADE_MAE`` e ``RENDA_FAMILIAR`` viram Q001, Q002 e Q006
+      (mesmos códigos A–H e A–Q em todos os anos);
+    - linhas com ``IN_NOTA_ZERO`` (0 em alguma prova objetiva) são excluídas, como recomenda
+      o ETL, porque distorcem média, percentil e z-score.
+    """
+
+    source_name = "official"
+    dataset_version = "enem-pja3-gold"
+
+    def __init__(self, gold_path: str):
+        import duckdb  # lazy import to keep demo mode lightweight
+
+        self.duckdb = duckdb
+        self.gold_path = Path(gold_path).resolve().as_posix()
+        self._years: list[int] = []
+        self._school_years: list[int] = []
+        self._validate()
+
+    def _source(self) -> str:
+        escaped = self.gold_path.replace("'", "''")
+        return f"read_parquet('{escaped}')"
+
+    def _base(self) -> str:
+        school_years = ", ".join(str(year) for year in self._school_years) or "NULL"
+        notas = ", ".join(
+            f"CAST({column} AS DOUBLE) AS {column}" for column in AREA_COLUMNS.values()
+        )
+        return f"""(
+            SELECT
+                CAST(NU_ANO AS INTEGER) AS NU_ANO,
+                SG_UF_PROVA,
+                CASE
+                    WHEN TIPO_ESCOLA = 'publica' THEN 2
+                    WHEN TIPO_ESCOLA = 'privada' THEN 3
+                    WHEN TIPO_ESCOLA IS NULL AND NU_ANO IN ({school_years}) THEN 1
+                END AS TP_ESCOLA,
+                ESCOLARIDADE_PAI AS Q001,
+                ESCOLARIDADE_MAE AS Q002,
+                RENDA_FAMILIAR AS Q006,
+                {notas}
+            FROM {self._source()}
+            WHERE IN_NOTA_ZERO IS NOT TRUE
+        ) AS gold"""
+
+    def _validate(self) -> None:
+        if not Path(self.gold_path).is_file():
+            raise FileNotFoundError(f"Camada gold não encontrada: {self.gold_path}")
+        with self._connect() as con:
+            columns = {
+                row[0] for row in con.execute(f"DESCRIBE SELECT * FROM {self._source()}").fetchall()
+            }
+            missing = [column for column in GOLD_REQUIRED_COLUMNS if column not in columns]
+            if missing:
+                raise ValueError(
+                    "Camada gold sem as colunas esperadas: "
+                    + ", ".join(missing)
+                    + ". Gere a gold novamente com o ETL atualizado."
+                )
+            rows = con.execute(
+                f"""SELECT CAST(NU_ANO AS INTEGER), COUNT(TIPO_ESCOLA)
+                FROM {self._source()} WHERE NU_ANO IS NOT NULL GROUP BY 1 ORDER BY 1"""
+            ).fetchall()
+        if not rows:
+            raise ValueError(f"Camada gold vazia: {self.gold_path}")
+        self._years = [int(year) for year, _ in rows]
+        self._school_years = [int(year) for year, with_school in rows if with_school > 0]
+
+    def years(self) -> list[int]:
+        return list(self._years)
+
+
+_engine_cache: dict[tuple[str, str, str, str], DataEngine] = {}
 _engine_lock = Lock()
 
 
@@ -475,7 +568,18 @@ def build_engine(settings: Settings) -> DataEngine:
     mode = settings.normalized_data_mode
     parquet_candidates = discover_parquet_files(settings.parquet_glob)
 
+    gold_available = Path(settings.gold_path).is_file()
+
     if mode == "official":
+        if gold_available:
+            try:
+                engine = GoldEngine(settings.gold_path)
+                logger.info("Fonte oficial (camada gold) selecionada: %s", settings.gold_path)
+                return engine
+            except Exception as exc:
+                raise RuntimeError(
+                    "Camada gold encontrada, mas inválida para consulta analítica."
+                ) from exc
         if not parquet_candidates:
             raise FileNotFoundError(
                 f"Dados oficiais não encontrados para o padrão: {settings.parquet_glob}."
@@ -494,6 +598,14 @@ def build_engine(settings: Settings) -> DataEngine:
         logger.info("Fonte demo selecionada explicitamente.")
         return engine
 
+    if gold_available:
+        try:
+            engine = GoldEngine(settings.gold_path)
+            logger.info("Modo auto selecionou a camada gold do ETL: %s", settings.gold_path)
+            return engine
+        except Exception as exc:
+            logger.warning("Camada gold detectada, mas inválida; tentando outras fontes. %s", exc)
+
     if parquet_candidates:
         try:
             engine = DuckDBEngine(settings.parquet_glob)
@@ -511,7 +623,12 @@ def build_engine(settings: Settings) -> DataEngine:
 
 def get_engine(settings: Settings) -> DataEngine:
     global _engine_cache
-    cache_key = (settings.normalized_data_mode, settings.parquet_glob, settings.demo_csv)
+    cache_key = (
+        settings.normalized_data_mode,
+        settings.gold_path,
+        settings.parquet_glob,
+        settings.demo_csv,
+    )
     with _engine_lock:
         engine = _engine_cache.get(cache_key)
         if engine is None:

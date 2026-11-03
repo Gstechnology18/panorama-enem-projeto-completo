@@ -24,6 +24,7 @@ data/raw/
 data/parquet/
 backend/data/raw/
 backend/data/parquet/
+backend/data/gold/
 !backend/data/demo/
 
 # IDE / OS

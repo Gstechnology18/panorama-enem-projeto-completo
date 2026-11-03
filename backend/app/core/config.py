@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     environment: str = "development"
     data_mode: str = Field(default="auto", validation_alias="PANORAMA_DATA_MODE")
     parquet_glob: str = str(PROJECT_ROOT / "backend/data/parquet/ano=*/enem.parquet")
+    # Camada gold do ETL (repositório enem_projeto_aplicado): data/gold/enem_notas.parquet
+    gold_path: str = str(PROJECT_ROOT / "backend/data/gold/enem_notas.parquet")
     demo_csv: str = str(PROJECT_ROOT / "backend/data/demo/enem_demo.csv")
     cors_origins: str = "http://localhost:5173,http://localhost:8080"
     api_prefix: str = "/api/v1"
@@ -23,6 +25,7 @@ class Settings(BaseSettings):
         env_prefix="PANORAMA_",
         env_file=".env",
         extra="ignore",
+        populate_by_name=True,
     )
 
     @property

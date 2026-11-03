@@ -78,7 +78,7 @@ export default function RegionalModule({ year }) {
       </div>
 
       {error && <div className="alert" role="alert">{error}</div>}
-      {!data ? <Loading label="Buscando dados das 27 UFs…" /> : (
+      {!data ? (!error && <Loading label="Buscando dados das 27 UFs…" />) : (
         <>
           <div className="regional-overview">
             <div className="regional-map-card">
